@@ -5,6 +5,7 @@ package banco;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class App {
@@ -53,27 +54,41 @@ public class App {
                 System.out.println("\t\t--------------------------------");
                 System.out.println("");
                 System.out.print("Ingrese la opción : ");
-                option = inScanner.nextInt();
+                try {
+                    option = inScanner.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.print("\n\t  Ingrese una opción válida :p \n ");
+                    inScanner.nextLine(); // Limpiar el buffer
+                    option = 0;
+                    continue;
+                }
                 switch (option) {
+                    case 0:
+                        break;
                     case 1:
-                        inScanner.nextLine();
-                        System.out.print("Ingrese la identificacion del usuario (uno real jaja) > ");
-                        identificacion = inScanner.nextLong();
-                        inScanner.nextLine();
-                        System.out.print("Ingrese el nombre del usuario > ");
-                        name = inScanner.nextLine();
-                        System.out.print("Ingrese la fecha de nacimiento del usuario (YYYY-MM-DD) > ");
-                        nacimiento = inScanner.next();
+                        try {
+                            inScanner.nextLine();
+                            System.out.print("Ingrese la identificacion del usuario (uno real jaja) > ");
+                            identificacion = inScanner.nextLong();
+                            inScanner.nextLine();
+                            System.out.print("Ingrese el nombre del usuario > ");
+                            name = inScanner.nextLine();
+                            System.out.print("Ingrese la fecha de nacimiento del usuario (YYYY-MM-DD) > ");
+                            nacimiento = inScanner.next();
 
-                        if (identificacion > 100000 && !name.isEmpty() && !nacimiento.isEmpty()) {
-                            System.out.print("Ingrese el saldo inicial del usuario > ");
-                            saldo = inScanner.nextDouble();
-                            cuentas.add(new Cuenta(saldo, new Persona(name, nacimiento, identificacion)));
-                            System.out.println("\n\tUsuario creado exitosamente!");
-                        } else {
-                            System.out.println("\n\tNo se creó el usuario, los datos deben estar completos");
+                            if (identificacion > 100000 && !name.isEmpty() && !nacimiento.isEmpty()) {
+                                System.out.print("Ingrese el saldo inicial del usuario > ");
+                                saldo = inScanner.nextDouble();
+                                cuentas.add(new Cuenta(saldo, new Persona(name, nacimiento, identificacion)));
+                                System.out.println("\n\tUsuario creado exitosamente!");
+                            } else {
+                                System.out.println("\n\tNo se creó el usuario, los datos deben estar completos");
+                            }
+                            System.out.println("");
+                        } catch (InputMismatchException e) {
+                            // TODO: handle exception
+                            System.out.println("\n\tTiene que ingresar valores correctamente");
                         }
-                        System.out.println("");
                         break;
 
                     case 2:
