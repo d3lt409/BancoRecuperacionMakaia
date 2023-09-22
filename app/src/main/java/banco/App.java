@@ -63,8 +63,6 @@ public class App {
                     continue;
                 }
                 switch (option) {
-                    case 0:
-                        break;
                     case 1:
                         try {
                             inScanner.nextLine();
@@ -156,8 +154,10 @@ public class App {
                         System.out.println("\n\t¿Desea actualizar el nombre del usuario?");
                         System.out.println("\n\t1. Si");
                         System.out.println("\n\t2. No");
+                        System.out.print("\nIngrese seleccion > ");
                         short opcion = inScanner.nextShort();
                         if (opcion == 1) {
+                            inScanner.nextLine();
                             System.out.print("Ingrese el nuevo nombre del usuario > ");
                             String newName = inScanner.nextLine();
                             persona.setNombre(newName);
