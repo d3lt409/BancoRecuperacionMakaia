@@ -3,12 +3,160 @@
  */
 package banco;
 
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
+
+    public static void printAccountEnum(List<Cuenta> cuentas) {
+        System.out.println("----------------");
+        for (int i = 0; i < cuentas.size(); i++) {
+            System.out.println((i + 1) + ". " + cuentas.get(i).getDatosCuenta());
+        }
+        System.out.println("----------------");
+    }
+
+    public static void printPersonEnum(List<Cuenta> cuentas) {
+        System.out.println("----------------");
+        for (int i = 0; i < cuentas.size(); i++) {
+            System.out.println((i + 1) + ". " + cuentas.get(i).getTitular());
+        }
+        System.out.println("----------------");
     }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+
+        List<Cuenta> cuentas = new ArrayList<Cuenta>();
+
+        int option = 0;
+        long identificacion = 0;
+        String name = null;
+        String nacimiento = null;
+        short selectIndex = 0;
+        Cuenta account;
+        double saldo = 0;
+
+        try (Scanner inScanner = new Scanner(System.in)) {
+            do {
+                System.out.println("\n\t\t--------------------------------");
+                System.out.println("\t\tBienvenido al mejor bando del mundo mundial !!!");
+                System.out.println("\t\t--------------------------------");
+                System.out.println("\t\t1. Crear cuenta");
+                System.out.println("\t\t2. Agregar saldo a cuenta");
+                System.out.println("\t\t3. Retirar saldo a cuenta");
+                System.out.println("\t\t4. Ver Datos de la cuenta");
+                System.out.println("\t\t--------------------------------");
+                System.out.println("\t\t5. Actualizar datos de usuario");
+                System.out.println("\t\t--------------------------------");
+                System.out.println("\t\tPara salir otro numero");
+                System.out.println("\t\t--------------------------------");
+                System.out.println("");
+                System.out.print("Ingrese la opción : ");
+                option = inScanner.nextInt();
+                switch (option) {
+                    case 1:
+                        inScanner.nextLine();
+                        System.out.print("Ingrese la identificacion del usuario (uno real jaja) > ");
+                        identificacion = inScanner.nextLong();
+                        inScanner.nextLine();
+                        System.out.print("Ingrese el nombre del usuario > ");
+                        name = inScanner.nextLine();
+                        System.out.print("Ingrese la fecha de nacimiento del usuario (YYYY-MM-DD) > ");
+                        nacimiento = inScanner.next();
+
+                        if (identificacion > 100000 && !name.isEmpty() && !nacimiento.isEmpty()) {
+                            System.out.print("Ingrese el saldo inicial del usuario > ");
+                            saldo = inScanner.nextDouble();
+                            cuentas.add(new Cuenta(saldo, new Persona(name, nacimiento, identificacion)));
+                            System.out.println("\n\tUsuario creado exitosamente!");
+                        } else {
+                            System.out.println("\n\tNo se creó el usuario, los datos deben estar completos");
+                        }
+                        System.out.println("");
+                        break;
+
+                    case 2:
+                        if (!cuentas.isEmpty()) {
+                            System.out.println("--------------------------------");
+                            System.out.println("Las Cuentas");
+                            printAccountEnum(cuentas);
+                            System.out.println("Seleccione la cuenta");
+                            selectIndex = inScanner.nextShort();
+                            account = cuentas.get(selectIndex - 1);
+                            System.out.print("¿Cuanto saldo desea ingresar a la cuenta? >");
+                            saldo = inScanner.nextDouble();
+                            account.setIngreso(saldo);
+                            System.out.println("\n\tSaldo agregado exitosamente, saldo nuevo: " + account.getSaldoDeCuenta());
+                        } else {
+                            System.out.println("\n\tNo hay ninguna cuenta :'(");
+                        }
+                        System.out.println("--------------------------------");
+                        break;
+                    case 3:
+                        if (!cuentas.isEmpty()) {
+                            System.out.println("--------------------------------");
+                            System.out.println("Las Cuentas");
+                            printAccountEnum(cuentas);
+                            System.out.println("Seleccione la cuenta");
+                            selectIndex = inScanner.nextShort();
+                            account = cuentas.get(selectIndex - 1);
+                            System.out.print("¿Cuanto saldo desea retirar a la cuenta? >");
+                            saldo = inScanner.nextDouble();
+                            if (account.setRetiro(saldo)) {
+                                System.out.println("\n\tSe hace el retiro de " + saldo + ", saldo restante: "
+                                        + account.getSaldoDeCuenta());
+                            } else {
+                                System.out.println("\n\tSaldo insuficiente, saldo:" + account.getSaldoDeCuenta());
+                            }
+
+                        } else {
+                            System.out.println("No hay ninguna cuenta :'(");
+                        }
+                        break;
+                    case 4:
+                        System.out.println("--------------------------------");
+                        System.out.println("Las Cuentas");
+                        printAccountEnum(cuentas);
+                        System.out.println("Seleccione la cuenta");
+                        selectIndex = inScanner.nextShort();
+                        account = cuentas.get(selectIndex - 1);
+                        System.out.println("--------------------------------");
+                        System.out.println("\n\tDatos de la cuenta> " + account.getDatosCuenta() + ", saldo de la cuenta: " + account.getSaldoDeCuenta());
+                        System.out.println("\n\tDatos de usuario> " + account.getTitular());
+                        System.out.println("----------------------------------");
+                        break;
+                    case 5:
+                        System.out.println("--------------------------------");
+                        System.out.println("Los usuarios");
+                        printPersonEnum(cuentas);
+                        System.out.print("Seleccione el usuario >");
+                        selectIndex = inScanner.nextShort();
+                        account = cuentas.get(selectIndex - 1);
+                        Persona persona = account.getTitular();
+                        System.out.println("--------------------------------");
+                        System.out.println("\n\tEl usuario: ");
+                        System.out.println(persona);
+                        System.out.println("----------------------------------");
+                        System.out.println("\n\t¿Desea actualizar el nombre del usuario?");
+                        System.out.println("\n\t1. Si");
+                        System.out.println("\n\t2. No");
+                        short opcion = inScanner.nextShort();
+                        if (opcion == 1) {
+                            System.out.print("Ingrese el nuevo nombre del usuario > ");
+                            String newName = inScanner.nextLine();
+                            persona.setNombre(newName);
+                            System.out.println("\n\tUsuario actualizado exitosamente");
+                        }
+
+
+                        break;
+
+                    default:
+                        option = -1;
+                }
+            } while (option != -1);
+        }
     }
+
 }

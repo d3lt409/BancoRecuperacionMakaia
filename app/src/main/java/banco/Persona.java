@@ -1,20 +1,36 @@
 package banco;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.text.DateFormat;
+
 public class Persona {
     
 
     private String nombre;
-    private int edad;
-    private int identificacion;
+    private LocalDate nacimiento;
+    private long identificacion;
 
     public Persona(){
         this.nombre = "unnamed";
-        this.edad = 0;
     }
 
-    public Persona(String nombre, int edad, int identificacion){
+    public Persona(String nombre, String nacimiento, long identificacion){
         this.nombre = nombre;
-        this.edad = edad;
+        try {
+            this.nacimiento = LocalDate.parse(nacimiento);
+        } catch (DateTimeParseException e) {
+            // TODO: handle exception
+            String[] ageStrings = nacimiento.split("-");
+            if (ageStrings.length < 3){
+                ageStrings = nacimiento.split("/");
+                this.nacimiento = LocalDate.of(Integer.parseInt(ageStrings[2]) ,Integer.parseInt(ageStrings[1]) , Integer.parseInt(ageStrings[0]));
+            }else{
+                this.nacimiento = LocalDate.of(Integer.parseInt(ageStrings[2]) ,Integer.parseInt(ageStrings[1]) , Integer.parseInt(ageStrings[0]));
+            }
+        }
         this.identificacion = identificacion;
     }
 
@@ -28,23 +44,15 @@ public class Persona {
     }
 
     public int getEdad() {
-        return this.edad;
+        return Period.between(nacimiento, LocalDate.now()).getYears();
     }
 
-    public void setEdad(int edad) {
-        this.edad = edad;
-    }
-
-    public int getIdentificacion() {
+    public long getIdentificacion() {
         return this.identificacion;
     }
 
-    public void setIdentificacion(int identificacion) {
-        this.identificacion = identificacion;
-    }
-
     public String mostrar(){
-        return "identificacion: " + this.getIdentificacion() + ", Nombre: " + this.getNombre() + ", edad: " + this.edad;
+        return "Identificacion: " + this.getIdentificacion() + ", Nombre: " + this.getNombre() + ", Edad: " + this.getEdad();
     }
 
     public boolean esMayorDeEdad(){
@@ -57,7 +65,7 @@ public class Persona {
 
     @Override
     public String toString() {
-        return "Identificacion: " + this.getIdentificacion() + ", Nombre: " + this.getNombre() + ", edad: " + this.getEdad();
+        return "Identificacion: " + this.getIdentificacion() + ", Nombre: " + this.getNombre() + ", Edad: " + this.getEdad();
     }
 
 }

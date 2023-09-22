@@ -10,15 +10,30 @@ public class Cuenta {
     public Cuenta(double saldoDeCuenta, Persona titular) {
         this.saldoDeCuenta = saldoDeCuenta;
         this.titular = titular;
-        this.numeroDeCuenta = 0;
+        this.numeroDeCuenta = generateNumCuenta();
+    }
+
+    private long generateNumCuenta(){
+        long numCuenta = (long) ((Math.random() * (9000000000L- 100000000)) + 100000000);
+        return numCuenta;
+    }
+
+    public Persona getTitular(){
+        return this.titular;
     }
 
     public void setIngreso(double ingreso) {
         this.saldoDeCuenta += ingreso;
     }
 
-    public void setRetiro(double retiro) {
-        this.saldoDeCuenta -= retiro;
+    public Boolean setRetiro(double retiro) {
+        if (this.getSaldoDeCuenta() >= retiro) {
+            this.saldoDeCuenta -= retiro;
+            return true;
+        }else{
+            return false;
+        }
+        
     }
 
     public double getSaldoDeCuenta() {
@@ -27,7 +42,7 @@ public class Cuenta {
 
 
     public String getDatosCuenta() {
-        return this.titular.getIdentificacion() + " Numero de cuenta: " + this.numeroDeCuenta;
+        return "Identificación: " + this.titular.getIdentificacion() + ", Numero de cuenta: " + this.numeroDeCuenta;
     }
 
 
